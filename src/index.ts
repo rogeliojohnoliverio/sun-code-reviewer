@@ -44,8 +44,8 @@ export = (app: Probot) => {
           head: commits[commits.length - 1].sha,
         });
 
-        const excludedFiles = process.env.EXCLUDED_FILES
-          ? process.env.EXCLUDED_FILES.split(',')
+        const excludedFiles = process.env.IGNORED_FILES
+          ? process.env.IGNORED_FILES.split(',')
           : [];
 
         const filesNames = files?.map((file) => file.filename) || [];
