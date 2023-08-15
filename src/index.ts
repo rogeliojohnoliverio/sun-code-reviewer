@@ -44,10 +44,18 @@ export = (app: Probot) => {
           head: commits[commits.length - 1].sha,
         });
 
+        const excludedFiles = process.env.EXCLUDED_FILES
+          ? process.env.EXCLUDED_FILES.split(',')
+          : [];
+
         const filesNames = files?.map((file) => file.filename) || [];
-        changedFiles = changedFiles?.filter((file) =>
-          filesNames.includes(file.filename)
-        );
+
+        changedFiles = changedFiles?.filter((file) => {
+          return (
+            !excludedFiles.includes(file.filename) &&
+            filesNames.includes(file.filename)
+          );
+        });
       }
 
       if (!changedFiles?.length) {
