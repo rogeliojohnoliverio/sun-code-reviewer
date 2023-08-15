@@ -1,4 +1,5 @@
 import { Probot } from 'probot';
+import { Chat } from './chat';
 
 const MAX_PATCH_COUNT = process.env.MAX_PATCH_LENGTH
   ? +process.env.MAX_PATCH_LENGTH
@@ -32,6 +33,7 @@ export = (app: Probot) => {
       });
 
       let { files: changedFiles, commits } = data.data;
+      const chat = new Chat();
 
       // This will run when and every new commit is pushed to the pull request
       if (context.payload.action === 'synchronize' && commits.length >= 2) {
@@ -76,7 +78,7 @@ export = (app: Probot) => {
           continue;
         }
 
-        console.log(patch);
+        console.log(chat.codeReview(file.filename, patch));
       }
 
       await context.octokit.issues.createComment({
