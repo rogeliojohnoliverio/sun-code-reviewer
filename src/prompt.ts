@@ -97,11 +97,11 @@ export class Prompts {
 
     ### Example response
 
-    22-22:
+   \`Line:22-22\` in \`$filename\`
     There's a syntax error in the add function.
     \`\`\`diff
-    -    retrn z
-    +    return z
+    - 1 return z
+    + 2 return z
     \`\`\`
     ---
     24-25:
