@@ -97,11 +97,11 @@ export class Prompts {
 
     ### Example response
 
-    22-22:
+   \`Line:22-22\`
     There's a syntax error in the add function.
     \`\`\`diff
-    -    retrn z
-    +    return z
+    - return z
+    + return z
     \`\`\`
     ---
     24-25:
