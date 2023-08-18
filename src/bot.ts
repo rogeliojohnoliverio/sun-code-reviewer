@@ -107,14 +107,32 @@ export const Bot = (app: Probot) => {
           console.log(`${file.filename} skipped due to large diff`);
           continue;
         }
-        const res = await chat?.codeReview(file.filename, patch);
-        console.log(res);
-        await context.octokit.issues.createComment({
-          repo: repo.repo,
-          owner: repo.owner,
-          issue_number: context.pullRequest().pull_number,
-          body: res as string,
-        });
+
+        try {
+          const res = await chat?.codeReview(file.filename, patch);
+
+          if (!!res) {
+            await context.octokit.pulls.createReviewComment({
+              repo: repo.repo,
+              owner: repo.owner,
+              pull_number: context.pullRequest().pull_number,
+              commit_id: commits[commits.length - 1].sha,
+              path: file.filename,
+              body: res,
+              position: patch.split('\n').length - 1,
+            });
+          }
+        } catch (e) {
+          throw new Error(`review ${file.filename} failed`);
+        }
+        // const res = await chat?.codeReview(file.filename, patch);
+        // console.log(res);
+        // await context.octokit.issues.createComment({
+        //   repo: repo.repo,
+        //   owner: repo.owner,
+        //   issue_number: context.pullRequest().pull_number,
+        //   body: res as string,
+        // });
       }
     }
   );
