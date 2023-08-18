@@ -125,14 +125,6 @@ export const Bot = (app: Probot) => {
         } catch (e) {
           throw new Error(`review ${file.filename} failed`);
         }
-        // const res = await chat?.codeReview(file.filename, patch);
-        // console.log(res);
-        // await context.octokit.issues.createComment({
-        //   repo: repo.repo,
-        //   owner: repo.owner,
-        //   issue_number: context.pullRequest().pull_number,
-        //   body: res as string,
-        // });
       }
     }
   );
