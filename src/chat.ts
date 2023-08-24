@@ -1,6 +1,7 @@
-import { ChatGPTAPI } from 'chatgpt';
+import { ChatGPTAPI, ChatMessage } from 'chatgpt';
 import { Inputs } from './input';
 import { Prompts } from './prompt';
+import { assessment } from './constant';
 
 export class Chat {
   private chatAPI: ChatGPTAPI;
@@ -20,19 +21,29 @@ export class Chat {
     });
   }
 
-  private generatePrompt = (filename: string, patch: string) => {
+  private generateReviewPrompt = (filename: string, patch: string) => {
     const prompts = new Prompts();
     const input = new Inputs(filename, patch);
     return input.render(prompts.reviewFilePrompt);
+  };
+
+  private generateAssessmentPrompt = (filename: string, patch: string) => {
+    const prompts = new Prompts();
+    const input = new Inputs(filename, patch);
+    return input.render(prompts.assessFileDiff);
   };
 
   public codeReview = async (filename: string, patch: string) => {
     if (!patch) {
       return '';
     }
-
-    const prompt = this.generatePrompt(filename, patch);
-    const res = await this.chatAPI.sendMessage(prompt);
+    let res: ChatMessage;
+    const reviewPrompt = this.generateReviewPrompt(filename, patch);
+    const assessmentPrompt = this.generateAssessmentPrompt(filename, patch);
+    res = await this.chatAPI.sendMessage(assessmentPrompt);
+    if (res.text.includes(assessment.NEEDS_REVIEW)) {
+      res = await this.chatAPI.sendMessage(reviewPrompt);
+    }
     return res.text;
   };
 }

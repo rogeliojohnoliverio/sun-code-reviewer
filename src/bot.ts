@@ -1,5 +1,6 @@
 import { Context, Probot } from 'probot';
 import { Chat } from './chat';
+import { assessment } from './constant';
 
 const OPENAI_API_KEY = 'OPENAI_API_KEY';
 const MAX_PATCH_COUNT = process.env.MAX_PATCH_LENGTH
@@ -110,7 +111,6 @@ export const Bot = (app: Probot) => {
 
         try {
           const res = await chat?.codeReview(file.filename, patch);
-
           if (!!res) {
             await context.octokit.pulls.createReviewComment({
               repo: repo.repo,
@@ -118,12 +118,14 @@ export const Bot = (app: Probot) => {
               pull_number: context.pullRequest().pull_number,
               commit_id: commits[commits.length - 1].sha,
               path: file.filename,
-              body: res,
-              position: patch.split('\n').length - 1,
+              body: res.includes(assessment.APPROVED)
+                ? `${assessment.APPROVED} :white_check_mark:`
+                : `### NEEDS REVIEW :bangbang: \n\n${res}`,
+              line: patch.split('\n').length - 1,
             });
           }
         } catch (e) {
-          throw new Error(`review ${file.filename} failed`);
+          throw new Error(`Review on ${file.filename} failed.\n ${e}`);
         }
       }
     }
