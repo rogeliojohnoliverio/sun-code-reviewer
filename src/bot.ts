@@ -121,7 +121,8 @@ export const Bot = (app: Probot) => {
               body: res.includes(assessment.APPROVED)
                 ? `${assessment.APPROVED} :white_check_mark:`
                 : `### NEEDS REVIEW :bangbang: \n\n${res}`,
-              line: patch.split('\n').length - 1,
+              line:
+                patch.split('\n').length > 1 ? patch.split('\n').length - 1 : 1,
             });
           }
         } catch (e) {
