@@ -113,7 +113,7 @@ export class Prompts {
     $patch
     `;
 
-  triageFileDiff = `Below the summary, I would also like you to triage the diff as \`NEEDS_REVIEW\` or
+  assessFileDiff = `I would like you to triage the file changes as \`NEEDS_REVIEW\` or
     \`APPROVED\` based on the following criteria:
 
     - If the diff involves any modifications to the logic or functionality, even if they
@@ -136,5 +136,8 @@ export class Prompts {
     - Do not provide any reasoning why you triaged the diff as \`NEEDS_REVIEW\` or \`APPROVED\`.
     - Do not mention that these changes affect the logic or functionality of the code in
       the summary. You must only use the triage status format above to indicate that.
+
+    ## Changes made to \`$filename\` for your triage
+    $patch
     `;
 }
