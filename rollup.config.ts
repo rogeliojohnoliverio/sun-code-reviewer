@@ -20,4 +20,12 @@ export default defineConfig([
     },
     plugins: [esbuild()],
   },
+  {
+    input: ['api/github/webhooks/index.ts'],
+    output: {
+      dir: 'dist/api/github/webhooks',
+      format: 'esm',
+    },
+    plugins: [esbuild()],
+  },
 ]);
