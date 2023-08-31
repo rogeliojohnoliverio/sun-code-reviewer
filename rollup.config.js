@@ -1,5 +1,5 @@
-import esbuild from 'rollup-plugin-esbuild';
 import { defineConfig } from 'rollup';
+import typescript from 'rollup-plugin-typescript2';
 
 export default defineConfig([
   {
@@ -9,7 +9,8 @@ export default defineConfig([
       format: 'esm',
       inlineDynamicImports: false,
     },
-    plugins: [esbuild({ include: 'src/*.ts' })],
+    cache: false,
+    plugins: [typescript({ include: 'src/*.ts' })],
   },
   {
     input: 'src/index.ts',
@@ -18,7 +19,8 @@ export default defineConfig([
       format: 'esm',
       inlineDynamicImports: false,
     },
-    plugins: [esbuild()],
+    cache: false,
+    plugins: [typescript()],
   },
   {
     input: ['api/github/webhooks/index.ts'],
@@ -26,6 +28,7 @@ export default defineConfig([
       dir: 'dist/api/github/webhooks',
       format: 'esm',
     },
-    plugins: [esbuild()],
+    cache: false,
+    plugins: [typescript()],
   },
 ]);

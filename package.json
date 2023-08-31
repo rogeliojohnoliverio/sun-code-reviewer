@@ -13,8 +13,9 @@
     "probot-app"
   ],
   "scripts": {
-    "build": "rimraf --glob 'dist' && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "start": "npm run build && node -r dotenv/config ./dist/index.js",
+    "build": "rimraf --glob 'dist' && rollup -c",
+    "start": "node -r dotenv/config ./dist/index.js",
+    "all": "npm run build && npm run start",
     "test": "jest"
   },
   "dependencies": {
@@ -22,7 +23,8 @@
     "dotenv": "^16.3.1",
     "probot": "^12.2.4",
     "rollup": "^3.28.0",
-    "rollup-plugin-esbuild": "^5.0.0"
+    "rollup-plugin-esbuild": "^5.0.0",
+    "rollup-plugin-typescript2": "^0.35.0"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.0.0",
