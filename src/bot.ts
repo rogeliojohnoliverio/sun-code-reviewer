@@ -1,6 +1,6 @@
 import { Context, Probot } from 'probot';
-import { Chat } from './chat';
-import { assessment } from './constant';
+import { Chat } from './chat.js';
+import { assessment } from './constant.js';
 
 const OPENAI_API_KEY = 'OPENAI_API_KEY';
 const MAX_PATCH_COUNT = process.env.MAX_PATCH_LENGTH
@@ -121,8 +121,7 @@ export const Bot = (app: Probot) => {
               body: res.includes(assessment.APPROVED)
                 ? `${assessment.APPROVED} :white_check_mark:`
                 : `### NEEDS REVIEW :bangbang: \n\n${res}`,
-              line:
-                patch.split('\n').length > 1 ? patch.split('\n').length - 1 : 1,
+              position: patch.split('\n').length - 1,
             });
           }
         } catch (e) {
