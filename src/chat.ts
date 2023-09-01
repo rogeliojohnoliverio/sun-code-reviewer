@@ -1,7 +1,7 @@
 import { ChatGPTAPI, ChatMessage } from 'chatgpt';
-import { Inputs } from './input';
-import { Prompts } from './prompt';
-import { assessment } from './constant';
+import { Inputs } from './input.js';
+import { Prompts } from './prompt.js';
+import { assessment } from './constant.js';
 
 export class Chat {
   private chatAPI: ChatGPTAPI;

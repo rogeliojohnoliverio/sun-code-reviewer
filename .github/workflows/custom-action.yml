@@ -21,6 +21,6 @@ jobs:
         run: npm install
 
       - name: Run Probot App
-        run: npm run all
+        run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
