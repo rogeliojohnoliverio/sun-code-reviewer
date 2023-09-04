@@ -1,52 +1,65 @@
-# ⚙️ Sun Code Reviewer using CHATGPT
+# ⚙️ Sun AI Code Reviewer
 
-Sun Code Reviewer: Sun Code Reviewer is an AI-based code reviewer and summarizer for GitHub pull requests using OpenAI's gpt-3.5-turbo and gpt-4 models. It is designed to be used as a GitHub Action and can be configured to run on every pull request and review comments. Try installing `Sun Code Reviewer` now and use it in your development reviewer with ease!
+Sun AI Code Reviewer is an AI-based code reviewer suggesting code improvements, refactors and pointing out issues for every GitHub pull request using OpenAI's gpt-3.5-turbo and other models. It is designed to be used as a GitHub Action and can be configured to run on every pull request (PR) and additional commits on that PR. Try using `Sun Code Reviewer` now as Github Actions!
 
-## 🔗 Link
+> LIMITATIONS: As this project is still on an ongoing development and dependent on the AI assistant used, we expect that there are still some little inconsistencies to the reviews being suggested by the AI assistant (ChatGPT). Nevertheless, it should still suggest relevant and useful improvements based on the code changes/diffs. Feel free to help us improve this project!
 
 ## ⭐ Features
 
-   - PR Summarization: It generates a summary and release notes of the changes in the pull request.
    - Line-by-line code change suggestions: Reviews the changes line by line and provides code change suggestions.
    - Continuous, incremental reviews: Reviews are performed on each commit within a pull request, rather than a one-time review on the entire pull request.
-   - Cost-effective and reduced noise: Incremental reviews save on OpenAI costs and reduce noise by tracking changed files between commits and the base of the pull request.
+   - Use as a Github Action: Initiate the automatic code review by configuring a yaml file just like how we setup linter and formatter actions
 
 ## 🔑 Requirements
-Register an OpenAI API account and create a secret key for it. Copy and paste the secret key to github->repository->settings->secret->variales and add the OPENAI_API_KEY as name and the API KEY as value.
+Register an OpenAI API account and create a secret key for it. Copy and paste the secret key to your repository's settings -> secret and variables -> actions -> variables and add the OPENAI_API_KEY as name and the API KEY as value.
 
 > You may opt to create a new account preferably using your personal email address to get a $5 free credit from OpenAI and use the API for free.
 
+## 👆 How to use as Github Action
+1. Configure the necessary settings on your desired repository to run the code reviewer action:
+    - Add your OPENAI_API_KEY variable as mentioned above
+![image](https://github.com/rogeliojohnoliverio/public-repo/assets/110364637/1aba07f9-3e56-4ce4-bb0f-2d46f9b23bb4)
+2. Create these directories on the root of your project `.github > workflows` and on the workflows folder, create a file named actions.yml (or can be anything to your liking).
+3. Add this content to the actions.yml
+```yml
+name: Sun Code Reviewer
+permissions:
+  contents: read
+  pull-requests: write
 
-## Setup
+on:
+  pull_request:
+    types: [opened, synchronize]
 
+jobs:
+  sun-ai-code-reviewer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: rogeliojohnoliverio/sun-code-reviewer@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ vars.OPENAI_API_KEY }}
+```
+4. Push this changes and this should run every opened pull request and every additional commit on that pull request
+
+## Local Setup
+1. Create a [Github App](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app)
+2. Setup Webhook channel using https://smee.io/ , copy the link created.
+3. Clone this repo and run `cp .env.example .env`
+4. Fill the necessary values in the .env
+5. On your desired test repository, set up the OPENAI_API_KEY as mentioned above
+6. Run the commands below
 ```sh
 # Install dependencies
 npm install
 
 # Run the bot we suggest use node version v18.17.0 it might have issue with other versions
-npm start
-
-#note: for first run it will generate and .env and check the WEBHOOK_PROXY_URL that is being generated use that in the Github app that you on the repo and add the value of WEBHOOK_PROXY_URL in Webhook URL.
-#after npm start then Check the .env.example file for data needed in .env please fill up properly
+npm run all
 ```
-## 👆 How to use
-
-1. On your project repository make your you added the application in the marketplace you check it in Settings->GitHub App if the app is added
-2. Click configure settings then update the .env file
-   - APP_ID: the ID of the app, which you can get from the app settings page.
-   - WEBHOOK_SECRET: Generate a unique secret with (e.g. with openssl rand -base64 32) and save it because you'll need it in a minute to configure your .env file
-   - PRIVATE_KEY: Download the private key from the app.
-3. Navigate to Permissions and Events some permissions must be granted
-   - Pull request permissions, Pull request review, Pull request review comment, Pull request review thread 
-   - At Repository permissions update it into read and write permissions the Commit status,Pull requests and Variables 
-4. Push new pull request or commit
-5. The result will also be appended below the latest commits which it will show some comments
-
-
+- For local setup references, you may watch this [TUTORIAL](https://www.youtube.com/watch?v=WSkoEqrL0r4)
 
 ## 👤 Developers
 
 - Augusto, Rose
 - Oliverio, Rogelio John
 - Vilo, Bruce Nigel
-
