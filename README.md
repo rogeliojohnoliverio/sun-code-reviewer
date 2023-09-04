@@ -1,6 +1,6 @@
-# ⚙️ Sun Code Reviewer using CHATGPT
+# ⚙️ Sun AI Code Reviewer
 
-Sun Code Reviewer: Sun Code Reviewer is an AI-based code reviewer and summarizer for GitHub pull requests using OpenAI's gpt-3.5-turbo and gpt-4 models. It is designed to be used as a GitHub Action and can be configured to run on every pull request and review comments. Try using `Sun Code Reviewer` now as Github Actions!
+Sun AI Code Reviewer is an AI-based code reviewer suggesting code improvements, refactors and pointing out issues for every GitHub pull request using OpenAI's gpt-3.5-turbo and other models. It is designed to be used as a GitHub Action and can be configured to run on every pull request (PR) and additional commits on that PR. Try using `Sun Code Reviewer` now as Github Actions!
 
 > LIMITATIONS: As this project is still on an ongoing development and dependent on the AI assistant used, we expect that there are still some little inconsistencies to the reviews being suggested by the AI assistant (ChatGPT). Nevertheless, it should still suggest relevant and useful improvements based on the code changes/diffs. Feel free to help us improve this project!
 
