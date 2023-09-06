@@ -1,46 +1,65 @@
 import { Context, Probot } from 'probot';
 import { Chat } from './chat.js';
 import { assessment } from './constant.js';
+import axios from 'axios';
 
-const OPENAI_API_KEY = 'OPENAI_API_KEY';
 const MAX_PATCH_COUNT = process.env.MAX_PATCH_LENGTH
   ? +process.env.MAX_PATCH_LENGTH
   : Infinity;
 
-const loadChat = async (context: Context) => {
-  if (process.env.OPENAI_API_KEY) {
-    return new Chat(process.env.OPENAI_API_KEY);
-  }
-
-  const repo = context.repo();
-
-  try {
-    // Check env on the repository
-    const { data } = (await context.octokit.request(
-      'GET /repos/{owner}/{repo}/actions/variables/{name}',
-      {
-        owner: repo.owner,
-        repo: repo.repo,
-        name: OPENAI_API_KEY,
+  const loadChat = async (context: Context) => {
+    if (process.env.OPENAI_API_KEY) {
+      return new Chat(process.env.OPENAI_API_KEY);
+    }
+  
+    const repo = context.repo();
+  
+    try {
+      // Check env on the repository
+      const { data } = (await context.octokit.request(
+        'GET /repos/{owner}/{repo}/actions/variables/{name}',
+        {
+          owner: repo.owner,
+          repo: repo.repo,
+          name: 'OPENAI_API_KEY', // Ensure 'OPENAI_API_KEY' is a string
+        }
+      )) as any;
+  
+      if (!data?.value) {
+        throw new Error("OPENAI_API_KEY is not set in Variables/Secrets on this repository");
       }
-    )) as any;
-
-    if (!data?.value) {
+  
+      // Test the API key by making a simple request to the OpenAI API
+      const apiKey = data.value;
+      const response = await axios.post('https://api.openai.com/v1/engines/davinci/completions', {
+        prompt: 'Hello, world!',
+        max_tokens: 5
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+  
+      if (response.status !== 200) {
+        throw new Error(`API key test request failed with status: ${response.status}`);
+      }
+  
+      return new Chat(apiKey);
+    } catch (error: any) {
+      await context.octokit.issues.createComment({
+        repo: repo.repo,
+        owner: repo.owner,
+        issue_number: context.pullRequest().pull_number,
+        body: `### Error :x:\n${
+          error.response?.data?.error?.message ||
+          error?.message ||
+          'Invalid API key. Please check your OPENAI_API_KEY in Variables/Secrets on this repository.'
+        }` 
+        });
       return null;
     }
-
-    return new Chat(data.value);
-  } catch {
-    await context.octokit.issues.createComment({
-      repo: repo.repo,
-      owner: repo.owner,
-      issue_number: context.pullRequest().pull_number,
-      body: `OPENAI_API_KEY is not set in Variables/Secrets on this repository`,
-    });
-    return null;
-  }
-};
-
+  };
 export const Bot = (app: Probot) => {
   app.on(
     ['pull_request.opened', 'pull_request.synchronize'],
