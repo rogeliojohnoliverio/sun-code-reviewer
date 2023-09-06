@@ -124,7 +124,15 @@ export const Bot = (app: Probot) => {
               position: patch.split('\n').length - 1,
             });
           }
-        } catch (e) {
+        } catch (e: any) {
+          await context.octokit.issues.createComment({
+            repo: repo.repo,
+            owner: repo.owner,
+            issue_number: context.pullRequest().pull_number,
+            body: `### Error :x:\nReview on \`${file.filename}\` failed. ${
+              e?.message && `\`${e?.message}\``
+            }`,
+          });
           throw new Error(`Review on ${file.filename} failed.\n ${e}`);
         }
       }
