@@ -51,7 +51,7 @@ const MAX_PATCH_COUNT = process.env.MAX_PATCH_LENGTH
         repo: repo.repo,
         owner: repo.owner,
         issue_number: context.pullRequest().pull_number,
-        body: "### Error :x: Invalid API key. Please check your API key and try again."
+        body: "### Error :x: Invalid API key. Please check your OPENAI_API_KEY in Variables/Secrets on this repository."
       });
       return null;
     }
