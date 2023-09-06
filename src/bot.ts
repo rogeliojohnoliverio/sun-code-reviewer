@@ -46,12 +46,12 @@ const MAX_PATCH_COUNT = process.env.MAX_PATCH_LENGTH
       }
   
       return new Chat(apiKey);
-    } catch (error) {
+    } catch (error: any) {
       await context.octokit.issues.createComment({
         repo: repo.repo,
         owner: repo.owner,
         issue_number: context.pullRequest().pull_number,
-        body: "### Error :x: Invalid API key. Please check your OPENAI_API_KEY in Variables/Secrets on this repository."
+        body: `### Error :x:\n\`${error?.message || "Invalid API key. Please check your OPENAI_API_KEY in Variables/Secrets on this repository."}\``
       });
       return null;
     }
