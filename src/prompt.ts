@@ -67,7 +67,7 @@ export class Prompts {
 
     20: def add(x, y):
     21:     z = x + y
-    22:     retrn z
+    22:     return z
     23:
     24: def multiply(x, y):
     25:     return x * y
