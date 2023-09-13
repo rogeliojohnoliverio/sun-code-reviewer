@@ -130,16 +130,14 @@ export const Bot = (app: Probot) => {
 
         try {
           const res = await chat?.codeReview(file.filename, patch);
-          if (!!res) {
+          if (!!res && !res.includes(assessment.APPROVED)) {
             await context.octokit.pulls.createReviewComment({
               repo: repo.repo,
               owner: repo.owner,
               pull_number: context.pullRequest().pull_number,
               commit_id: commits[commits.length - 1].sha,
               path: file.filename,
-              body: res.includes(assessment.APPROVED)
-                ? `${assessment.APPROVED} :white_check_mark:`
-                : `### NEEDS REVIEW :bangbang: \n\n${res}`,
+              body: `### NEEDS REVIEW :bangbang: \n\n${res}`,
               position: patch.split('\n').length - 1,
             });
           }
