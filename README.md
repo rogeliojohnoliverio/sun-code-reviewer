@@ -46,8 +46,7 @@ jobs:
 1. Create a [Github App](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app)
 2. Setup Webhook channel using https://smee.io/ , copy the link created.
 3. Clone this repo and run `cp .env.example .env`
-4. Fill the necessary values in the .env
-5. On your desired test repository, set up the OPENAI_API_KEY as mentioned above
+4. Fill the necessary values in the .env (refer to this [TUTORIAL](https://www.youtube.com/watch?v=WSkoEqrL0r4))
 6. Run the commands below
 ```sh
 # Install dependencies
@@ -56,7 +55,6 @@ npm install
 # Run the bot we suggest use node version v18.17.0 it might have issue with other versions
 npm run all
 ```
-- For local setup references, you may watch this [TUTORIAL](https://www.youtube.com/watch?v=WSkoEqrL0r4)
 
 ## 👤 Developers
 
